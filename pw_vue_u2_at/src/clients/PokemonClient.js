@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const consumirApi = async () => {
+const consumirApi = async (id) => {
     const response = axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`).then(r => r.data);
     console.log(response);
     return response;
@@ -18,11 +18,11 @@ const obtenerVectorNumerico = () => {
     return vector;
 }
 
-const obtenerVectorPokemon = (obtenerVectorNumerico) => {
-    const data1 = consumirApi(obtenerVectorNumerico[0]);
-    const data2 = consumirApi(obtenerVectorNumerico[1]);
-    const data3 = consumirApi(obtenerVectorNumerico[2]);
-    const data4 = consumirApi(obtenerVectorNumerico[3]);
+const obtenerVectorPokemon = async (obtenerVectorNumerico) => {
+    const data1 = await consumirApi(obtenerVectorNumerico[0]);
+    const data2 = await consumirApi(obtenerVectorNumerico[1]);
+    const data3 = await consumirApi(obtenerVectorNumerico[2]);
+    const data4 = await consumirApi(obtenerVectorNumerico[3]);
 
     const obj1 = {
         nombre: data1.name,
@@ -42,10 +42,15 @@ const obtenerVectorPokemon = (obtenerVectorNumerico) => {
         id: data4.id,
     }
 
-
+    return [obj1, obj2, obj3, obj4];
 }
 
 
-export async function consumirApiFacade(id) {
-    return await consumirApi(id);
+export async function consumirApiFacade() {
+    const vector = obtenerVectorNumerico();
+    return await obtenerVectorPokemon(vector);
+}
+
+export function obtenerAleatorioFacade(min, max) {
+    return obtenerAleatorio(min, max);
 }
